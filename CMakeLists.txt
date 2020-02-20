@@ -4,9 +4,6 @@ project(libquickjs C)
 file(READ ${PROJECT_SOURCE_DIR}/VERSION CONFIG_VERSION)
 string(STRIP ${CONFIG_VERSION} CONFIG_VERSION)
 
-# Set runtime statically linked library for MSVC projects
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-
 # Global Linux compiler definitions
 if(UNIX AND NOT APPLE)
     set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
@@ -57,7 +54,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/src/quickjs.c)
 target_compile_definitions(${PROJECT_NAME} PUBLIC CONFIG_VERSION=\"${CONFIG_VERSION}\" CONFIG_BIGNUM)
 if(WIN32 AND MINGW)
-    target_compile_options(${PROJECT_NAME} PUBLIC -Wno-deprecated-declarations)
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wno-deprecated-declarations)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE libbf libregexp libunicode)
 if(WIN32 AND MINGW)
