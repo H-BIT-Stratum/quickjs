@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(qjs C)
+project(libquickjs C)
 
 file(READ ${PROJECT_SOURCE_DIR}/VERSION CONFIG_VERSION)
 string(STRIP ${CONFIG_VERSION} CONFIG_VERSION)
@@ -43,24 +43,30 @@ target_sources(libregexp PRIVATE
 target_link_libraries(libregexp PUBLIC libunicode)
 
 # libquickjs
-add_library(libquickjs SHARED "")
-target_include_directories(libquickjs
+add_library(${PROJECT_NAME} SHARED "")
+target_include_directories(${PROJECT_NAME}
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include
     PRIVATE
     ${PROJECT_SOURCE_DIR}/lib/libbf
     ${PROJECT_SOURCE_DIR}/lib/libregexp
     ${PROJECT_SOURCE_DIR}/lib/libunicode)
-target_sources(libquickjs PRIVATE
+target_sources(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/src/cutils.c
     ${PROJECT_SOURCE_DIR}/src/quickjs-libc.c
     ${PROJECT_SOURCE_DIR}/src/quickjs.c)
-target_compile_definitions(libquickjs PUBLIC CONFIG_VERSION=\"${CONFIG_VERSION}\" CONFIG_BIGNUM)
-target_link_libraries(libquickjs PRIVATE libbf libregexp libunicode)
+target_compile_definitions(${PROJECT_NAME} PUBLIC CONFIG_VERSION=\"${CONFIG_VERSION}\" CONFIG_BIGNUM)
+if(WIN32 AND MINGW)
+    target_compile_options(${PROJECT_NAME} PUBLIC -Wno-deprecated-declarations)
+endif()
+target_link_libraries(${PROJECT_NAME} PRIVATE libbf libregexp libunicode)
+if(WIN32 AND MINGW)
+    target_link_libraries(${PROJECT_NAME} PRIVATE pthread)
+endif()
 
-# quickjs
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/qjs.c)
-target_link_libraries(${PROJECT_NAME} libquickjs)
+# qjs
+add_executable(qjs ${PROJECT_SOURCE_DIR}/src/qjs.c)
+target_link_libraries(qjs libquickjs)
 if(UNIX AND NOT APPLE)
-    target_link_libraries(${PROJECT_NAME} dl m)
+    target_link_libraries(qjs dl m)
 endif()
