@@ -7,6 +7,11 @@ string(STRIP ${CONFIG_VERSION} CONFIG_VERSION)
 # Set runtime statically linked library for MSVC projects
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
+# Global Linux compiler definitions
+if(UNIX AND NOT APPLE)
+    set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif()
+
 # libregexp
 add_library(libbf STATIC "")
 target_include_directories(libbf PUBLIC
@@ -56,3 +61,6 @@ target_link_libraries(libquickjs PRIVATE libbf libregexp libunicode)
 # quickjs
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/qjs.c)
 target_link_libraries(${PROJECT_NAME} libquickjs)
+if(UNIX AND NOT APPLE)
+    target_link_libraries(${PROJECT_NAME} dl m)
+endif()

@@ -48,6 +48,9 @@
 #if defined(__APPLE__)
 typedef sig_t sighandler_t;
 #endif
+#if defined(__linux__)
+typedef __sighandler_t sighandler_t;
+#endif
 #endif
 
 #include "cutils.h"
