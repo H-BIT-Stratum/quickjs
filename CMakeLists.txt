@@ -12,7 +12,7 @@ if(UNIX AND NOT APPLE)
     set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
-# libregexp
+# libbf
 add_library(libbf STATIC "")
 target_include_directories(libbf PUBLIC
     ${PROJECT_SOURCE_DIR}/include
