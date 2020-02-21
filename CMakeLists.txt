@@ -55,6 +55,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 target_compile_definitions(${PROJECT_NAME} PUBLIC CONFIG_VERSION=\"${CONFIG_VERSION}\" CONFIG_BIGNUM)
 if(WIN32 AND MINGW)
     target_compile_options(${PROJECT_NAME} PRIVATE -Wno-deprecated-declarations)
+    target_link_options(${PROJECT_NAME} PRIVATE -Wl,-Bstatic -lpthread -static-libgcc)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE bf regexp unicode)
 if(WIN32 AND MINGW)
