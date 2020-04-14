@@ -6,7 +6,7 @@ string(STRIP ${CONFIG_VERSION} CONFIG_VERSION)
 
 # Global Linux compiler definitions
 if(UNIX AND NOT APPLE)
-    set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 endif()
 
 # libbf
